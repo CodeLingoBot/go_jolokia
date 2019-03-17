@@ -228,7 +228,8 @@ func (jolokiaClient *JolokiaClient) SetCredential(userName string, pass string) 
 	jolokiaClient.pass = pass
 }
 
-/* Set target host when jolokia agent working in proxy architecture e.g. "10.0.1.96:7911"
+/* 
+(see: https://jolokia.org/reference/html/proxy.html) */Set target host when jolokia agent working in proxy architecture e.g. "10.0.1.96:7911"
 (see: https://jolokia.org/reference/html/proxy.html) */
 func (jolokiaClient *JolokiaClient) SetTarget(targetHost string) {
 	jolokiaClient.target = targetHost
@@ -286,7 +287,7 @@ func (jolokiaClient *JolokiaClient) executePostRequest(jolokiaRequest *JolokiaRe
 	})
 }
 
-/* Executes a jolokia operation execution request using a jolokia client and return response */
+/* ExecuteOperation executes a jolokia operation execution request using a jolokia client and return response */
 func (jolokiaClient *JolokiaClient) ExecuteOperation(mBean, operation string, arguments interface{}, pattern string) (*JolokiaReadResponse, error) {
 	resp, requestErr := jolokiaClient.executePostRequestCallback(pattern, func() ([]byte, error) {
 		return wrapExecData(mBean, nil, operation, arguments, jolokiaClient.target, jolokiaClient.targetUser, jolokiaClient.targetPass)
@@ -302,7 +303,7 @@ func (jolokiaClient *JolokiaClient) ExecuteOperation(mBean, operation string, ar
 	return &respJ, nil
 }
 
-/* Executes a jolokia request using a jolokia client and return response */
+/* ExecuteRequest executes a jolokia request using a jolokia client and return response */
 func (jolokiaClient *JolokiaClient) ExecuteRequest(jolokiaRequest *JolokiaRequest, pattern string) (*JolokiaResponse, error) {
 	resp, requestErr := jolokiaClient.executePostRequest(jolokiaRequest, pattern)
 	if requestErr != nil {
@@ -316,7 +317,7 @@ func (jolokiaClient *JolokiaClient) ExecuteRequest(jolokiaRequest *JolokiaReques
 	return &respJ, nil
 }
 
-/* Executes a jolokia read request using a jolokia client and return response */
+/* ExecuteReadRequest executes a jolokia read request using a jolokia client and return response */
 func (jolokiaClient *JolokiaClient) ExecuteReadRequest(jolokiaRequest *JolokiaRequest) (*JolokiaReadResponse, error) {
 	resp, requestErr := jolokiaClient.executePostRequest(jolokiaRequest, "")
 	if requestErr != nil {
@@ -376,7 +377,7 @@ func (jolokiaClient *JolokiaClient) ListProperties(domain string, properties []s
 	return ret, nil
 }
 
-/* Get a attribute value of a specific property of an bean and a domain using a jolokia client */
+/* GetAttr gets a attribute value of a specific property of an bean and a domain using a jolokia client */
 func (jolokiaClient *JolokiaClient) GetAttr(domain string, properties []string, attribute string) (interface{}, error) {
 	request := NewJolokiaRequest(READ, domain, properties, attribute)
 	resp, requestErr := jolokiaClient.ExecuteReadRequest(request)
